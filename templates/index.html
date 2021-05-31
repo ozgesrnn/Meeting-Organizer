@@ -1,0 +1,174 @@
+{% extends 'homebase.html' %}
+{% include 'header.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="jumbotron text-info">
+                    <h2><b> Toplantı Listesi </b>
+                        <button type="button" class="btn btn-success float-right"
+                                data-toggle="modal" data-target="#mymodal">Yeni Toplantı Ekle
+                        </button>
+                    </h2>
+                    <hr>
+                    
+
+                    
+                {% with messages = get_flashed_messages() %}
+ 
+                {% if messages %}
+ 
+                {% for message in messages %}
+ 
+                <div class="alert alert-success alert-dismissable" role="alert">
+ 
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+ 
+                        <span aria-hidden="true">x</span>
+ 
+                    </button>
+ 
+ 
+                {{message}}
+ 
+ 
+                </div>
+ 
+ 
+                {% endfor %}
+ 
+                {% endif %}
+                {% endwith %}
+
+                    <table class="table  table-light">
+                        
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Toplantı Konusu</th>
+                            <th scope="col">Tarih</th>
+                            <th scope="col">Başlangıç Saati</th>
+                            <th scope="col">Bitiş Saati</th>
+                            <th scope="col">Katılımcılar</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        
+                        {% for row in meets %}
+                        
+                        <tr>
+                            <th scope="row">{{row.id}}</th>
+                            <td>{{row.konu}}</td>
+                            <td>{{row.tarih}}</td>
+                            <td>{{row.bsaat}}</td>
+                            <td>{{row.esaat}}</td>
+                            <td>{{row.kisiler}}</td>
+
+                            <td>
+                                <a href="/update/{{row.id}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.id}}">Düzenle</a>
+                                <a href="/delete/{{row.id}}" class="btn btn-danger btn-xs"
+                                   onclick="return confirm('Silmek istediğinize emin misiniz?')" data-toggle="modal"
+                                   data-target="#modaledit">Sil</a>
+
+                            </td>
+                        </tr>
+                        
+                        <div class="modal fade" id="modaledit{{row.id}}" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Toplantı Güncelle</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{url_for('update')}}" method="POST">
+
+                                            <div class="form-group">
+                                                <label>Konu:</label>
+                                                <input type="hidden" name="id" value="{{row.id}}">
+                                                <input class="form-control" name="konu" type="text" value="{{row.konu}}" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Tarih:</label>
+                                                <input class="form-control" name="tarih" type="text" value="{{row.tarih}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Başlangıç Saati:</label>
+                                                <input class="form-control" name="bsaat" type="text" value="{{row.bsaat}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Bitiş Saati:</label>
+                                                <input class="form-control" name="esaat" type="text" value="{{row.esaat}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Katılımcılar:</label>
+                                                <input class="form-control" name="kisiler" type="text" value="{{row.kisiler}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <button class="btn btn-primary" type="submit">Güncelle</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </table>
+                        </div>
+
+                        
+                        <div class="modal fade" id="mymodal" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+
+                                        <h4 class="modal-title">Toplantı Ekle</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{url_for('insert')}}" method="POST">
+                                            <div class="form-group">
+                                                <label>Konu:</label>
+                                                <input class="form-control" name="konu" required="1" type="text">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Tarih:</label>
+                                                <input class="form-control" name="tarih" type="text">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Başlangıç Saati:</label>
+                                                <input class="form-control" name="bsaat" type="text">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Bitiş Saati:</label>
+                                                <input class="form-control" name="esaat" type="text">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Katılımcılar:</label>
+                                                <input class="form-control" name="kisiler" type="text">
+                                            </div>
+                                            <div class="form-group">
+                                                <button class="btn btn-primary" type="submit">Ekle</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    </div>
+
+{% endblock %}
